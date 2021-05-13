@@ -1,30 +1,47 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"strings"
+)
 
 type deck []string
 
+func newDeck() deck {
+	cards := deck{}
+	cardSuits := []string{"Spades", "Heart", "Diamonds", "Clubs"}
+	cardValues := []string{"Ace", "Two", "Three", "Four"}
+	for _, suit := range cardSuits {
+		for _, value := range cardValues {
+			cards = append(cards, value+" of "+suit)
+		}
+	}
+	return cards
+}
+
 func (d deck) print() {
 	for i, card := range d {
-		fmt.Println(i+1, card)
+		fmt.Println(i, card)
 	}
 }
 
-func newDeck() deck {
+func deal(d deck, handSize int) (deck, deck) {
+	return d[:handSize], d[handSize:]
+}
 
-	cards := deck{}
+func (d deck) toString() string {
+	return strings.Join([]string(d), ",")
+}
 
-	cardSuits := []string{"Diamonds", "Hearts", "Spades", "Clubs"}
-	cardValues := []string{"Ace",
-		"Two", "Three", "Four", "Five", "Six",
-		"Seven", "Eight", "Nine", "Ten",
-		"Jack", "Queen", "King"}
+func (d deck) saveToFile(filename string) error {
+	return ioutil.WriteFile(filename, []byte(d.toString()), 0777)
+}
 
-	for _, suit := range cardSuits {
-		for _, value := range cardValues {
-			cards = append(cards, suit+" of "+value)
-		}
+func newDeckFromFile(filename string) deck {
+	bs, err := ioutil.ReadFile(filename)
+	if err != nil {
+		fmt.Println("Error!", err)
 	}
-
-	return cards
+	return deck(strings.Split(string(bs), ","))
 }
