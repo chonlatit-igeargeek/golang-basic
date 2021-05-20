@@ -4,11 +4,11 @@ import "fmt"
 
 func main() {
 
-	person := map[string]int{
+	persons := map[string]int{
 		"karn": 29,
 		"set":  30,
 	}
-	fmt.Println(person)
+	printPersonMap(persons)
 
 	colors := make(map[string]string)
 	colors["red"] = "#FF0000"
@@ -20,6 +20,12 @@ func main() {
 func printMap(colors map[string]string) {
 	for color, hexcode := range colors {
 		fmt.Println(color, hexcode)
+	}
+}
+
+func printPersonMap(persons map[string]int) {
+	for name, age := range persons {
+		fmt.Println(name, age)
 	}
 }
 
